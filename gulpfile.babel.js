@@ -47,13 +47,20 @@ gulp.task('lint', () =>
 
 // Optimize images
 gulp.task('images', () =>
-  gulp.src('app/images/**/*')
+  gulp.src('app/assets/images/**/*')
     .pipe($.cache($.imagemin({
       progressive: true,
       interlaced: true
     })))
-    .pipe(gulp.dest('dist/images'))
+    .pipe(gulp.dest('dist/assets/images'))
     .pipe($.size({title: 'images'}))
+);
+
+// Compiles videos
+gulp.task('videos', () =>
+  gulp.src('app/assets/videos/**/*')
+    .pipe(gulp.dest('dist/assets/videos'))
+    .pipe($.size({title: 'videos'}))
 );
 
 // Copy all files at the root level (app)
@@ -173,7 +180,7 @@ gulp.task('serve', ['scripts', 'styles'], () => {
   gulp.watch(['app/**/*.html'], reload);
   gulp.watch(['app/styles/**/*.{scss,css}'], ['styles', reload]);
   gulp.watch(['app/scripts/**/*.js'], ['lint', 'scripts', reload]);
-  gulp.watch(['app/images/**/*'], reload);
+  gulp.watch(['app/assets/**/*'], reload);
 });
 
 // Build and serve the output from the dist build
@@ -196,7 +203,7 @@ gulp.task('serve:dist', ['default'], () =>
 gulp.task('default', ['clean'], cb =>
   runSequence(
     'styles',
-    ['lint', 'html', 'scripts', 'images', 'copy'],
+    ['lint', 'html', 'scripts', 'images', 'videos', 'copy'],
     'generate-service-worker',
     cb
   )
@@ -238,7 +245,7 @@ gulp.task('generate-service-worker', ['copy-sw-scripts'], () => {
     ],
     staticFileGlobs: [
       // Add/remove glob patterns to match your directory setup.
-      `${rootDir}/images/**/*`,
+      `${rootDir}/assets/**/*`,
       `${rootDir}/scripts/**/*.js`,
       `${rootDir}/styles/**/*.css`,
       `${rootDir}/*.{html,json}`
