@@ -103,7 +103,4 @@
       pauseButton.innerHTML = '&#9654;';
     }
   });
-
-  
 })();
-
